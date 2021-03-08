@@ -1,23 +1,25 @@
 package com.ghg;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
-
 public class TestBase {
 	
 	public static WebDriver driver;
 	public static Properties prop;
-	
+	public static ThreadLocal<WebDriver> tdriver = new ThreadLocal<WebDriver>();
 	
 	public TestBase(){
 		try {
@@ -34,7 +36,7 @@ public class TestBase {
 	}
 	
 	
-	public static void initialization(){
+	public static WebDriver initialization(){
 		String browserName = prop.getProperty("browser");
 		
 		if(browserName.equals("chrome")){
@@ -58,11 +60,26 @@ public class TestBase {
 		driver.manage().deleteAllCookies();
 		driver.manage().timeouts().pageLoadTimeout(50, TimeUnit.SECONDS);
 		driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
-	
 		driver.get(prop.getProperty("url"));
-		
+		tdriver.set(driver);
+		return getDriver();
+				
 	}
 	
+	public static synchronized WebDriver getDriver() {
+		return tdriver.get();
+	}
 	
+	public String getScreenshot() {
+		File src = ((TakesScreenshot) getDriver()).getScreenshotAs(OutputType.FILE);
+		String path = System.getProperty("user.dir") + "/screenshots/" + System.currentTimeMillis() + ".png";
+		File destination = new File(path);
+		try {
+			FileUtils.copyFile(src, destination);
+		} catch (IOException e) {
+			System.out.println("Capture Failed " + e.getMessage());
+		}
+		return path;
+	}
 
 }

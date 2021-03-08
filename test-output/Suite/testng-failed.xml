@@ -5,10 +5,8 @@
     <classes>
       <class name="com.ghg.WaterUseF13">
         <methods>
-          <include name="ReportF1"/>
           <include name="setUp"/>
-          <include name="ReportF3"/>
-          <include name="ReportF2"/>
+          <include name="ReportD1"/>
           <include name="teardown"/>
         </methods>
       </class> <!-- com.ghg.WaterUseF13 -->
