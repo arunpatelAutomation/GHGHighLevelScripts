@@ -31,7 +31,7 @@ public class WaterUseF13 extends TestBase {
 
 	@Test(priority = 1, groups = "Vehicles and Equipment D1-D3")
 	@Description("Verify Vehicles and Equipment Report D1")
-	public void ReportD1() throws InterruptedException {
+	public void ReportF1() throws InterruptedException {
 
 		driver.findElement(By.xpath("//a[contains(text(),'F-1')]")).click();
 		Thread.sleep(2000);
